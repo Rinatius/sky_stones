@@ -1,0 +1,78 @@
+{
+	"name": "Stone",
+	"plugin-id": "Sprite",
+	"sid": 690343535398689,
+	"isGlobal": false,
+	"instanceVariables": [
+		{
+			"name": "underAim",
+			"type": "boolean",
+			"desc": "",
+			"show": true,
+			"sid": 729980478381880
+		},
+		{
+			"name": "value",
+			"type": "string",
+			"desc": "",
+			"show": true,
+			"sid": 770241851310869
+		},
+		{
+			"name": "counterValue",
+			"type": "string",
+			"desc": "",
+			"show": true,
+			"sid": 949092425323015
+		},
+		{
+			"name": "selectable",
+			"type": "boolean",
+			"desc": "",
+			"show": true,
+			"sid": 814482907856164
+		}
+	],
+	"behaviorTypes": [
+		{
+			"behaviorId": "MoveTo",
+			"name": "MoveTo",
+			"sid": 102670595097239
+		},
+		{
+			"behaviorId": "solid",
+			"name": "Solid",
+			"sid": 855019113871124
+		}
+	],
+	"effectTypes": [],
+	"animations": {
+		"items": [
+			{
+				"frames": [
+					{
+						"width": 250,
+						"height": 250,
+						"originX": 0.5,
+						"originY": 0.5,
+						"originalSource": "",
+						"exportFormat": "lossless",
+						"exportQuality": 0.8,
+						"imageSpriteId": 9445316,
+						"useCollisionPoly": true,
+						"duration": 1,
+						"tag": ""
+					}
+				],
+				"sid": 697613177052309,
+				"name": "Animation 1",
+				"isLooping": false,
+				"isPingPong": false,
+				"repeatCount": 1,
+				"repeatTo": 0,
+				"speed": 5
+			}
+		],
+		"subfolders": []
+	}
+}

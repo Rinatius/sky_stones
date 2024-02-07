@@ -1,0 +1,769 @@
+{
+	"name": "Event sheet 1",
+	"events": [
+		{
+			"eventType": "variable",
+			"name": "stonesNumPerWave",
+			"type": "number",
+			"initialValue": "6",
+			"comment": "",
+			"isStatic": false,
+			"isConstant": false,
+			"sid": 211065374108645
+		},
+		{
+			"eventType": "variable",
+			"name": "firstLoopIndex",
+			"type": "number",
+			"initialValue": "0",
+			"comment": "",
+			"isStatic": false,
+			"isConstant": false,
+			"sid": 113862646628998
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-start-of-layout",
+					"objectClass": "System",
+					"sid": 470181160527618
+				}
+			],
+			"actions": [
+				{
+					"id": "stop-animation",
+					"objectClass": "Stone",
+					"sid": 151017737796389
+				},
+				{
+					"id": "request-project-file",
+					"objectClass": "AJAX",
+					"sid": 212396853243633,
+					"parameters": {
+						"tag": "\"numbers_json\"",
+						"file": "numbers.json"
+					}
+				}
+			],
+			"sid": 509960489744396
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-completed",
+					"objectClass": "AJAX",
+					"sid": 218085418395294,
+					"parameters": {
+						"tag": "\"numbers_json\""
+					}
+				}
+			],
+			"actions": [
+				{
+					"id": "parse",
+					"objectClass": "JSON",
+					"sid": 565813088796624,
+					"parameters": {
+						"data": "AJAX.LastData"
+					}
+				}
+			],
+			"sid": 993099332926734,
+			"children": [
+				{
+					"eventType": "variable",
+					"name": "index",
+					"type": "number",
+					"initialValue": "0",
+					"comment": "",
+					"isStatic": false,
+					"isConstant": false,
+					"sid": 111853125790522
+				},
+				{
+					"eventType": "block",
+					"conditions": [
+						{
+							"id": "for-each",
+							"objectClass": "JSON",
+							"sid": 758981555476491,
+							"parameters": {
+								"path": "\"\""
+							}
+						}
+					],
+					"actions": [],
+					"sid": 668592232698440,
+					"children": [
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "is-between-values",
+									"objectClass": "System",
+									"sid": 406981961805597,
+									"parameters": {
+										"value": "index",
+										"lower-bound": "firstLoopIndex",
+										"upper-bound": "firstLoopIndex+stonesNumPerWave-1"
+									}
+								}
+							],
+							"actions": [
+								{
+									"callFunction": "createStone",
+									"sid": 197112920780306,
+									"parameters": [
+										"random(0, ViewportWidth(0))",
+										"random(-Stone.Width, -ViewportHeight(0))",
+										"JSON.CurrentKey",
+										"JSON.CurrentValue"
+									]
+								},
+								{
+									"callFunction": "createStone",
+									"sid": 303719919035383,
+									"parameters": [
+										"random(0, ViewportWidth(0))",
+										"random(-Stone.Width, -ViewportHeight(0))",
+										"JSON.CurrentValue",
+										"JSON.CurrentKey"
+									]
+								},
+								{
+									"id": "add-to-eventvar",
+									"objectClass": "System",
+									"sid": 930556694592870,
+									"parameters": {
+										"variable": "index",
+										"value": "1"
+									}
+								}
+							],
+							"sid": 468482451521476
+						}
+					]
+				}
+			]
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "is-overlapping-another-object",
+					"objectClass": "Stone",
+					"sid": 910619279614490,
+					"parameters": {
+						"object": "Rocket"
+					}
+				}
+			],
+			"actions": [
+				{
+					"id": "destroy",
+					"objectClass": "Stone",
+					"sid": 586539929850156
+				},
+				{
+					"callFunction": "destroyPair",
+					"sid": 594994707241183,
+					"parameters": [
+						"Stone.value"
+					]
+				}
+			],
+			"sid": 819696805224991
+		},
+		{
+			"functionName": "countAims",
+			"functionDescription": "",
+			"functionCategory": "",
+			"functionReturnType": "number",
+			"functionCopyPicked": false,
+			"functionIsAsync": false,
+			"functionParameters": [],
+			"eventType": "function-block",
+			"conditions": [
+				{
+					"id": "pick-by-evaluate",
+					"objectClass": "System",
+					"sid": 416490810749416,
+					"parameters": {
+						"object": "Stone",
+						"expression": "Stone.selectable & Stone.UnderAim"
+					}
+				}
+			],
+			"actions": [
+				{
+					"id": "set-function-return-value",
+					"objectClass": "Functions",
+					"sid": 859075160699559,
+					"parameters": {
+						"value": "Stone.PickedCount"
+					}
+				}
+			],
+			"sid": 149326169706114
+		},
+		{
+			"functionName": "destroyUnderAim",
+			"functionDescription": "",
+			"functionCategory": "",
+			"functionReturnType": "none",
+			"functionCopyPicked": false,
+			"functionIsAsync": false,
+			"functionParameters": [],
+			"eventType": "function-block",
+			"conditions": [
+				{
+					"id": "pick-by-evaluate",
+					"objectClass": "System",
+					"sid": 382544922724105,
+					"parameters": {
+						"object": "Stone",
+						"expression": "Stone.selectable & Stone.UnderAim"
+					}
+				}
+			],
+			"actions": [
+				{
+					"id": "toggle-boolean-instvar",
+					"objectClass": "Stone",
+					"sid": 469206067272442,
+					"parameters": {
+						"instance-variable": "selectable"
+					}
+				},
+				{
+					"id": "wait",
+					"objectClass": "System",
+					"sid": 158850265636489,
+					"parameters": {
+						"seconds": "1.0"
+					}
+				},
+				{
+					"id": "destroy",
+					"objectClass": "Stone",
+					"sid": 893202223391844
+				}
+			],
+			"sid": 213987117205723
+		},
+		{
+			"functionName": "createStone",
+			"functionDescription": "",
+			"functionCategory": "",
+			"functionReturnType": "none",
+			"functionCopyPicked": false,
+			"functionIsAsync": false,
+			"functionParameters": [
+				{
+					"name": "createX",
+					"type": "number",
+					"initialValue": "0",
+					"comment": "",
+					"sid": 379026227398174
+				},
+				{
+					"name": "createY",
+					"type": "number",
+					"initialValue": "0",
+					"comment": "",
+					"sid": 986124530576974
+				},
+				{
+					"name": "value",
+					"type": "string",
+					"initialValue": "",
+					"comment": "",
+					"sid": 571652984148563
+				},
+				{
+					"name": "counterValue",
+					"type": "string",
+					"initialValue": "",
+					"comment": "",
+					"sid": 437971305000278
+				}
+			],
+			"eventType": "function-block",
+			"conditions": [],
+			"actions": [
+				{
+					"id": "create-object",
+					"objectClass": "System",
+					"sid": 539494693927086,
+					"parameters": {
+						"object-to-create": "Stone",
+						"layer": "0",
+						"x": "createX",
+						"y": "createY",
+						"create-hierarchy": false,
+						"template-name": "\"\""
+					}
+				},
+				{
+					"id": "set-instvar-value",
+					"objectClass": "Stone",
+					"sid": 652183957372558,
+					"parameters": {
+						"instance-variable": "value",
+						"value": "value"
+					}
+				},
+				{
+					"id": "set-instvar-value",
+					"objectClass": "Stone",
+					"sid": 285504431725527,
+					"parameters": {
+						"instance-variable": "counterValue",
+						"value": "counterValue"
+					}
+				},
+				{
+					"id": "set-text",
+					"objectClass": "StoneText",
+					"sid": 647664629874376,
+					"parameters": {
+						"text": "Stone.value"
+					}
+				},
+				{
+					"id": "pin-to-object-imagepoint",
+					"objectClass": "StoneText",
+					"sid": 657125859761851,
+					"behaviorType": "Pin",
+					"parameters": {
+						"pin-to": "Stone",
+						"image-point": "0",
+						"angle": true,
+						"width-type": "no",
+						"height-type": "no",
+						"z": false
+					}
+				},
+				{
+					"id": "pin-to-object-properties",
+					"objectClass": "Aim",
+					"sid": 975298852134525,
+					"behaviorType": "Pin",
+					"parameters": {
+						"pin-to": "Stone",
+						"x": true,
+						"y": true,
+						"angle": true,
+						"width-type": "no",
+						"height-type": "no",
+						"z": false
+					}
+				},
+				{
+					"id": "move-to-object",
+					"objectClass": "Stone",
+					"sid": 671180980292253,
+					"behaviorType": "MoveTo",
+					"parameters": {
+						"object": "Rocket",
+						"image-point": "0",
+						"mode": "direct"
+					}
+				}
+			],
+			"sid": 838690680403115
+		},
+		{
+			"functionName": "removeAim",
+			"functionDescription": "",
+			"functionCategory": "",
+			"functionReturnType": "none",
+			"functionCopyPicked": true,
+			"functionIsAsync": false,
+			"functionParameters": [],
+			"eventType": "function-block",
+			"conditions": [],
+			"actions": [
+				{
+					"id": "toggle-boolean-instvar",
+					"objectClass": "Stone",
+					"sid": 605440519936963,
+					"parameters": {
+						"instance-variable": "underAim"
+					}
+				},
+				{
+					"id": "set-visible",
+					"objectClass": "Aim",
+					"sid": 991316588787591,
+					"parameters": {
+						"visibility": "invisible"
+					}
+				}
+			],
+			"sid": 934880867293682
+		},
+		{
+			"functionName": "removeAllAims",
+			"functionDescription": "",
+			"functionCategory": "",
+			"functionReturnType": "none",
+			"functionCopyPicked": false,
+			"functionIsAsync": false,
+			"functionParameters": [],
+			"eventType": "function-block",
+			"conditions": [
+				{
+					"id": "pick-by-evaluate",
+					"objectClass": "System",
+					"sid": 207585295452296,
+					"parameters": {
+						"object": "Stone",
+						"expression": "Stone.selectable & Stone.UnderAim"
+					}
+				}
+			],
+			"actions": [
+				{
+					"id": "toggle-boolean-instvar",
+					"objectClass": "Stone",
+					"sid": 848392245113435,
+					"parameters": {
+						"instance-variable": "selectable"
+					}
+				},
+				{
+					"id": "wait",
+					"objectClass": "System",
+					"sid": 244213181476950,
+					"parameters": {
+						"seconds": "1.0"
+					}
+				},
+				{
+					"callFunction": "removeAim",
+					"sid": 368676715563804
+				},
+				{
+					"id": "toggle-boolean-instvar",
+					"objectClass": "Stone",
+					"sid": 573070678523993,
+					"parameters": {
+						"instance-variable": "selectable"
+					}
+				}
+			],
+			"sid": 524896470447582
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-tap-object",
+					"objectClass": "Touch",
+					"sid": 886839486020367,
+					"parameters": {
+						"object": "Stone"
+					}
+				}
+			],
+			"actions": [],
+			"sid": 113117702312381,
+			"children": [
+				{
+					"eventType": "block",
+					"conditions": [
+						{
+							"id": "pick-topbottom",
+							"objectClass": "Stone",
+							"sid": 996355122176819,
+							"parameters": {
+								"which": "top"
+							}
+						}
+					],
+					"actions": [],
+					"sid": 998001104052978,
+					"children": [
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "is-boolean-instance-variable-set",
+									"objectClass": "Stone",
+									"sid": 625861590739237,
+									"parameters": {
+										"instance-variable": "selectable"
+									}
+								}
+							],
+							"actions": [],
+							"sid": 859309882132263,
+							"children": [
+								{
+									"eventType": "block",
+									"conditions": [
+										{
+											"id": "is-boolean-instance-variable-set",
+											"objectClass": "Stone",
+											"sid": 395735569427092,
+											"parameters": {
+												"instance-variable": "underAim"
+											}
+										}
+									],
+									"actions": [
+										{
+											"callFunction": "removeAim",
+											"sid": 247762259833347
+										}
+									],
+									"sid": 466384584608107
+								},
+								{
+									"eventType": "block",
+									"conditions": [
+										{
+											"id": "else",
+											"objectClass": "System",
+											"sid": 881278845191840
+										}
+									],
+									"actions": [
+										{
+											"callFunction": "addAim",
+											"sid": 921331182424777
+										}
+									],
+									"sid": 762917254547771,
+									"children": [
+										{
+											"eventType": "block",
+											"conditions": [
+												{
+													"id": "compare-two-values",
+													"objectClass": "System",
+													"sid": 421424468154003,
+													"parameters": {
+														"first-value": "Functions.countAims",
+														"comparison": 0,
+														"second-value": "2"
+													}
+												}
+											],
+											"actions": [],
+											"sid": 127799689317357,
+											"children": [
+												{
+													"eventType": "block",
+													"conditions": [
+														{
+															"id": "compare-two-values",
+															"objectClass": "System",
+															"sid": 698977971397404,
+															"parameters": {
+																"first-value": "Functions.isPair",
+																"comparison": 0,
+																"second-value": "1"
+															}
+														}
+													],
+													"actions": [
+														{
+															"callFunction": "destroyUnderAim",
+															"sid": 818238925315192
+														}
+													],
+													"sid": 381345932799882
+												},
+												{
+													"eventType": "block",
+													"conditions": [
+														{
+															"id": "else",
+															"objectClass": "System",
+															"sid": 454115035009468
+														}
+													],
+													"actions": [
+														{
+															"callFunction": "removeAllAims",
+															"sid": 949131989401308
+														}
+													],
+													"sid": 697365071988292
+												}
+											]
+										}
+									]
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"functionName": "isPair",
+			"functionDescription": "",
+			"functionCategory": "",
+			"functionReturnType": "number",
+			"functionCopyPicked": false,
+			"functionIsAsync": false,
+			"functionParameters": [],
+			"eventType": "function-block",
+			"conditions": [],
+			"actions": [],
+			"sid": 171336616012042,
+			"children": [
+				{
+					"eventType": "variable",
+					"name": "result",
+					"type": "number",
+					"initialValue": "0",
+					"comment": "",
+					"isStatic": false,
+					"isConstant": false,
+					"sid": 923819478788070
+				},
+				{
+					"eventType": "block",
+					"conditions": [
+						{
+							"id": "pick-by-evaluate",
+							"objectClass": "System",
+							"sid": 216297789007552,
+							"parameters": {
+								"object": "Stone",
+								"expression": "Stone.selectable & Stone.underAim"
+							}
+						}
+					],
+					"actions": [
+						{
+							"type": "script",
+							"script": "if (runtime.objects.Stone.getPickedInstances()[0].instVars[\"value\"] == runtime.objects.Stone.getPickedInstances()[1].instVars[\"counterValue\"]) {\n\tlocalVars.result = 1\n}"
+						},
+						{
+							"id": "set-function-return-value",
+							"objectClass": "Functions",
+							"sid": 180804555368030,
+							"parameters": {
+								"value": "result"
+							}
+						}
+					],
+					"sid": 147261018952665
+				}
+			]
+		},
+		{
+			"functionName": "addAim",
+			"functionDescription": "",
+			"functionCategory": "",
+			"functionReturnType": "none",
+			"functionCopyPicked": true,
+			"functionIsAsync": false,
+			"functionParameters": [],
+			"eventType": "function-block",
+			"conditions": [],
+			"actions": [
+				{
+					"id": "toggle-boolean-instvar",
+					"objectClass": "Stone",
+					"sid": 776451541061341,
+					"parameters": {
+						"instance-variable": "underAim"
+					}
+				},
+				{
+					"id": "set-visible",
+					"objectClass": "Aim",
+					"sid": 468395903101689,
+					"parameters": {
+						"visibility": "visible"
+					}
+				}
+			],
+			"sid": 352210240949185
+		},
+		{
+			"functionName": "destroyPair",
+			"functionDescription": "",
+			"functionCategory": "",
+			"functionReturnType": "none",
+			"functionCopyPicked": false,
+			"functionIsAsync": false,
+			"functionParameters": [
+				{
+					"name": "pairValue",
+					"type": "string",
+					"initialValue": "",
+					"comment": "",
+					"sid": 395165508469552
+				}
+			],
+			"eventType": "function-block",
+			"conditions": [],
+			"actions": [],
+			"sid": 479477945933657,
+			"children": [
+				{
+					"eventType": "block",
+					"conditions": [
+						{
+							"id": "pick-by-comparison",
+							"objectClass": "System",
+							"sid": 413047398525061,
+							"parameters": {
+								"object": "Stone",
+								"expression": "Stone.counterValue",
+								"comparison": 0,
+								"value": "pairValue"
+							}
+						},
+						{
+							"id": "pick-by-comparison",
+							"objectClass": "System",
+							"sid": 433716128716223,
+							"parameters": {
+								"object": "Stone",
+								"expression": "Stone.counterValue",
+								"comparison": 0,
+								"value": "pairValue"
+							}
+						}
+					],
+					"actions": [],
+					"sid": 665202855553904,
+					"children": [
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "pick-random-instance",
+									"objectClass": "System",
+									"sid": 473229244060937,
+									"parameters": {
+										"object": "Stone"
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "destroy",
+									"objectClass": "Stone",
+									"sid": 350330859371939
+								}
+							],
+							"sid": 504556397324590
+						}
+					]
+				}
+			]
+		}
+	],
+	"sid": 996283674105478
+}
